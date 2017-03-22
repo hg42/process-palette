@@ -154,7 +154,6 @@ class ProcessOutputView extends View
     @refreshScrollLockButton();
 
   outputToPanel: (text) ->
-    text = @sanitizeOutput(text);
     addNewLine = false;
 
     for line in text.split('\n')
@@ -164,66 +163,121 @@ class ProcessOutputView extends View
       @appendLine(line);
       addNewLine = true;
 
+  # append line to output panel
+  #   uses three kinds of patterns (processed in three loops in this sequence):
+  #     * PTHEXP = path expression
+  #     * INLEXP = inline expression
+  #     * LINEXP = (whole-)line expression
+  #   * PTHEXPs are roughly the same as INLEXPs, but create clickable objects (PathView)
+  #   * PTHEXPs only match if a corresponding file exists (this allows very loose path regexps)
+  #   * INLEXPs are converted to span objects
+  #   * converting is done sequentially: remaining = match(line) ; while(remaining) remaining = match(remaining)
+  #   * resulting objects and the remaining strings are collected in an array (line_parts)
+  #   * LINEXPs are detected by using `^` at the start
+  #   *   because of that INLEXP anchored at the start of the line need to use a fake group or similar
+  #   * the first matching LINEXP stops matching outputs a span object wrapping the collected array
+
   appendLine: (line) ->
-    if @patterns.length == 0
-      @outputPanel.append(line);
-      return;
 
-    have_path_match = false
-    have_line_match = false
-    line_class = null
-    line_path = null
+    #console.log("<< " + line)
 
+    #@outputPanel.append @sanitizeOutput(line) + "<br>"
+
+    ##### process path patterns
+    line_parts = []
+    remaining = line
+    any_match = true
+    while remaining.length > 0 and any_match
+      any_match = false
+      for pattern in @patterns
+        #console.log(["pattern", pattern.config.name, pattern.config.isLineExpression, pattern.config.isPathExpression, pattern])
+        if pattern.config.isPathExpression
+          match = pattern.match(remaining)
+          if match?
+            #console.log(["path match", match.match, remaining])
+            if fsp.isFileSync(match.path)
+              any_match = true
+              #console.log(["path exist", match.match, remaining])
+              cwd = @processController.getCwd()
+              line_parts.push match.pre
+              obj = new PathView(cwd, match)
+              obj.name = "path"
+              line_parts.push obj
+              remaining = match.post
+              break # process remaining
+            remaining = match.post
+            line_parts.push match.pre + match.match
+    if remaining.length >= 0
+      line_parts.push remaining
+
+    ##### process inline patterns
+    parts = line_parts
+    line_parts = []
+    for part in parts
+      if typeof part == "string"
+        remaining = part
+        any_match = true
+        while remaining.length > 0 and any_match
+          any_match = false
+          for pattern in @patterns
+            #console.log(["pattern", pattern.config.name, remaining])
+            if pattern.config.isInlineExpression
+              match = pattern.match(remaining)
+              if match?
+                any_match = true
+                #console.log(["expr match", match, remaining])
+                line_parts.push match.pre
+                obj = $$ -> @span {class: pattern.config.name}, => @raw(match.match)
+                obj.name = pattern.config.name
+                line_parts.push obj
+                remaining = match.post
+                break # process remaining
+        if any_match
+          continue # next part
+        if remaining.length >= 0
+          line_parts.push remaining
+      else
+        line_parts.push part
+
+    if line_parts.length == 0
+      line_parts = [line]
+
+    #console.log(["line_parts", line_parts])
+    #console.log(">> " + line_processed)
+
+    ##### replace all objects in line for whole-line matching
+    line_processed = ""
+    for part in line_parts
+      if typeof part == "string"
+        line_processed += part
+      else
+        line_processed += "<" + part.name + ">"
+    #console.log("== " + line_processed)
+
+    ##### (whole-)line matching
     for pattern in @patterns
-      #console.log(pattern);
-      if pattern.config.isPathExpression
-        match = pattern.match(line);
-        if not have_path_match && match? && fsp.isFileSync(match.path)
-          cwd = @processController.getCwd();
-          line_path = {
-            pre:  match.pre,
-            path: new PathView(cwd, match),
-            post: match.post
-            };
-          # allow to style lines with matching paths
-          #if not have_line_match
-          #  line_class = "path-line"
-          have_path_match = true;
-      else
-        if not have_line_match && line.match(pattern.regex)
-          line_class = pattern.config.name;
-          have_line_match = true;
-      if have_path_match and have_line_match
-        break;
+      if pattern.config.isLineExpression
+        match = line_processed.match(pattern.regex)
+        if match?
+          #console.log(["line match", match.match, line_processed])
+          line_span = $$ -> @span {class: pattern.config.name}
+          for part in line_parts
+            if typeof part == "string"
+              line_span.append $$ -> @text(part)
+            else
+              line_span.append part
+          @outputPanel.append(line_span)
+          return
 
-    if line_class
-      if have_path_match
-        @outputPanel.append(
-          $$ ->
-            @span {class: line_class}, =>
-              @raw(line_path.pre)
-              @span =>
-                @subview "#{@lineIndex}", line_path.path
-              @raw(line_path.post)
-          );
-      else
-        @outputPanel.append(
-          $$ ->
-            @span {class: line_class}, => @raw(line)
-          );
-    else
-      if have_path_match
-        @outputPanel.append(line_path.pre);
-        @outputPanel.append(line_path.path);
-        @outputPanel.append(line_path.post);
-      else
-        @outputPanel.append(line);
+    for part in line_parts
+      if typeof part == "string"
+        part = @sanitizeOutput(part)
+      @outputPanel.append(part)
 
   # Tear down any state and detach
   destroy: ->
     if @processController
       @processController.removeProcessCallback(@);
-
     @buttonsView.destroy();
     @disposables.dispose();
     @element.remove();
@@ -236,5 +290,4 @@ class ProcessOutputView extends View
     output = escapeHTML(output);
     # Convert ANSI escape sequences (ex. colors) to HTML
     output = @ansiConvert.toHtml(output);
-
     return output;

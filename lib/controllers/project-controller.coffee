@@ -3,6 +3,7 @@ SaveController = require './save-controller'
 ConfigController = require './config-controller'
 ProcessController = require './process-controller'
 RegExpPattern = require '../pattern/regexp-pattern'
+PathPattern = require '../pattern/path-pattern'
 {Directory, File, BufferedProcess, CompositeDisposable} = require 'atom'
 os = require 'os';
 
@@ -137,12 +138,12 @@ class ProjectController
     @addPattern("default", config);
 
   addPattern: (name, config) ->
-    pattern = @createRegExpPattern(name, config);
+    pattern = @createPattern(name, config);
 
     if pattern != null
       @patterns[name] = pattern;
 
-  createRegExpPattern: (name, config) ->
+  createPattern: (name, config) ->
     # Make a copy so that the original doesn't get modified.
     config = JSON.parse(JSON.stringify(config));
     config.name = name
@@ -154,7 +155,9 @@ class ProjectController
     if !config.flags?
       config.flags = "i";
 
+    config.isLineExpression = config.expression.indexOf("^") == 0
     config.isPathExpression = config.expression.indexOf("(path)") >= 0
+    config.isInlineExpression = not config.isLineExpression and not config.isPathExpression
 
     if config.isPathExpression
       pathIndex = config.expression.indexOf("(path)");
@@ -172,28 +175,29 @@ class ProjectController
       if !config.path?
         config.path = @getPathExpression(lineIndex > -1);
 
-      config.expression = config.expression.replace("(path)", "("+config.path+")");
+      config.expression = config.expression.replace("(path)", "(" + config.path + ")");
       config.expression = config.expression.replace("(line)", "(\\d+)");
 
-    try
-      return new RegExpPattern(config);
-    catch err
-      console.error("Pattern #{name} could not be created.");
-      console.error(err);
+      try
+        return new PathPattern(config);
+      catch err
+        console.error("Pattern #{name} (Path) could not be created.");
+        console.error(err);
+
+    else
+
+      try
+        return new RegExpPattern(config);
+      catch err
+        console.error("Pattern #{name} (RegExp) could not be created.");
+        console.error(err);
 
     return null;
 
   getPathExpression: (hasLine) ->
-    if hasLine
-      if os.platform == "win32"
-        return "(?:[a-z]:\\\\|\\\\)?[\\w\\.\\-]+[\\\\[\\w\\.\\-]+]*";
-      else
-        return "(?:~\\/|\\/?)[\\w\\.\\-]+[\\/[\\w\\.\\-]+]*";
-
     if os.platform == "win32"
-      return "(?:[a-z]:\\\\|\\\\)?(?:[\\w\\.\\-]+\\\\)+[\\w\\.\\-]+";
-
-    return "(?:~\\/|\\/?)(?:[\\w\\.\\-]+\\/)+[\\w\\.\\-]+";
+      return "(?:[a-z]:\\\\|\\\\)?[\\w\\.\\-\\\\]+[.\\\\][\\w\\.\\-\\\\]+";
+    return "(?:~\\/|\\/)?[\\w\\.\\-\\/]+[.\\/][\\w\\.\\-\\/]+";
 
   editConfiguration: ->
     if (@configurationFile.isFile() and @configurationFile.existsSync())

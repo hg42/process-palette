@@ -1,4 +1,4 @@
-PathPattern = require './path-pattern'
+RegExpMatch = require './regexp-match'
 
 module.exports =
 class RegExpPattern
@@ -7,22 +7,28 @@ class RegExpPattern
     @regex = new RegExp(@config.expression, @config.flags);
 
   match: (text) ->
-    m = @regex.exec(text);
+    matches = @regex.exec(text);
 
-    if !m?
+    if !matches?
       return null;
 
     try
-      match = m[0];
-      path = m[@config.pathIndex];
-
-      pre = text.substring(0, m.index);
-      post = text.substring(m.index+m[0].length);
-      line = null;
-
-      if @config.lineIndex?
-        line = parseInt(m[@config.lineIndex]);
-
-      return new PathPattern(text, match, path, line, pre, post);
+      #console.log(["matches", matches])
+      if matches.length == 4 and (matches[1].length + matches[2].length + matches[3].length == text.length)
+        ## we have a special pattern with three groups for pre, match, post
+        # (note: three groups are necessary, because javascript does not have index of a group matches)
+        #console.log(["matches3", matches])
+        pre = matches[1]
+        match = matches[2]
+        post = matches[3]
+      else
+        ## no group, use complete match
+        match = matches[0]
+        start = matches.index
+        end = start + match.length
+        pre = text.substring(0, start);
+        post = text.substring(end);
+      #console.log(["pre/match/post", pre, match, post])
+      return new RegExpMatch(text, match, pre, post);
 
     return null;
