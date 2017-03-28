@@ -246,7 +246,34 @@
 }
 
 .process-palette-table-edit-view {
+
   border: 1px solid @tool-panel-border-color;
+
+  // .table-view.items-selected {
+  //   background: #ddd;
+  //   tr {
+  //     background: none;
+  //     padding-bottom: 3px;
+  //     margin-bottom: 0px;
+  //     &:hover {
+  //       border-bottom: 3px solid @syntax-cursor-color;
+  //       padding-bottom: 6px;
+  //       margin-bottom: 6px;
+  //       cursor: crosshair;
+  //       td :not([type=checkbox]) {
+  //         cursor:not-allowed;
+  //         pointer-events:none;
+  //       }
+  //     }
+  //     &.selected {
+  //       background: @background-color-selected;
+  //       &:hover {
+  //         cursor: inherit;
+  //         border-bottom: none;
+  //       }
+  //     }
+  //   }
+  // }
 
   table {
     width: 100%;
@@ -258,11 +285,15 @@
     text-align: center;
   }
 
+  // tr {
+  //   border: 1px solid black;
+  // }
+
   td {
-    padding-top: 5px;
+    padding-top: 2px;
     padding-left: 3px;
     padding-right: 3px;
-    padding-bottom: 0px;
+    padding-bottom: 2px;
   }
 
   td atom-text-editor[mini] {

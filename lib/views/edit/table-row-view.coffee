@@ -4,17 +4,18 @@ module.exports =
 class TableRowView extends HTMLElement
 
   initialize: (@tableView, @columnCount) ->
+
+    checkElement = document.createElement("td");
+    jcheck = $(checkElement);
+    checkButton = $$ ->
+      @input {type: 'checkbox', class: "select", checked: true}
+    checkButton.click (e) => @check(e);
+    #checkButton.on 'mousedown', (e) -> e.preventDefault();
+    #checkButton.on 'mouseup', (e) -> e.preventDefault();
+    jcheck.append(checkButton);
+    @appendChild(checkElement);
+
     @editors = [];
-
-    deleteElement = document.createElement("td");
-    jdelete = $(deleteElement);
-    deleteButton = $$ ->
-      @button {class: "btn btn-sm icon icon-x"}
-
-    deleteButton.click => @delete();
-    deleteButton.on 'mousedown', (e) -> e.preventDefault();
-    jdelete.append(deleteButton);
-    @appendChild(deleteElement);
 
     for column in [0...@columnCount]
       td = document.createElement("td");
@@ -23,6 +24,42 @@ class TableRowView extends HTMLElement
       jtd.append(editor);
       @appendChild(td);
       @editors.push(editor);
+
+    deleteElement = document.createElement("td");
+    jdelete = $(deleteElement);
+    deleteButton = $$ ->
+      @button {class: "btn btn-sm icon icon-x delete"}
+    deleteButton.click => @delete();
+    deleteButton.on 'mousedown', (e) -> e.preventDefault();
+    jdelete.append(deleteButton);
+    @appendChild(deleteElement);
+
+    $(@).on 'click', (e) => @tableView.move(@) if @ == e.currentTarget
+
+  check: (e) ->
+    @select_($(@).find(":checked").length > 0)
+    e.stopPropagation()
+
+  select: (value) ->
+    checkbox = $(@).find(".select")
+    console.log ["select", checkbox]
+    setTimeout(
+      (->
+        console.log ["setTimeout", checkbox]
+        checkbox.prop("checked", value)
+        ),
+      3000
+      )
+    @select_(value)
+
+  select_: (value) ->
+    if value
+      @selected = true
+      $(@).addClass "selected"
+    else
+      @selected = false
+      $(@).removeClass "selected"
+    @tableView.updateView()
 
   delete: ->
     @tableView.removeRowView(@);
