@@ -10,8 +10,6 @@ class TableRowView extends HTMLElement
     @selectButton = $$ ->
       @input {type: 'checkbox', class: "select input-checkbox"}
     @selectButton.click (e) => @clickSelect(e);
-    #@selectButton.on 'mousedown', (e) -> e.preventDefault();
-    #@selectButton.on 'mouseup', (e) -> e.preventDefault();
     jselect.append(@selectButton);
     @appendChild(selectElement);
 
@@ -24,8 +22,6 @@ class TableRowView extends HTMLElement
       editor.getModel().setSoftTabs(true);
       editor.getModel().setSoftWrapped(true);
       editor.getModel().setLineNumberGutterVisible(false);
-      #editor = $$ ->
-      #  @textarea {class: "input-textarea", rows: 1}
       jtd = $(td);
       jtd.append(editor);
       @appendChild(td);
@@ -40,10 +36,10 @@ class TableRowView extends HTMLElement
     jdelete.append(deleteButton);
     @appendChild(deleteElement);
 
-    #$(@).on 'click', (e) => @tableView.move(@) if @ == e.currentTarget
-    $(@).click (e) => @tableView.move(@) if @ == e.currentTarget
-    #$(@).on 'mousedown', (e) -> e.preventDefault();
-    #$(@).on 'mouseup', (e) -> e.preventDefault();
+    $(@).click (e) =>
+      if @.name == e.target.name or @.name == e.target.parentElement?.name
+        @tableView.move(@)
+        e.stopPropagation()
 
   setChecked: (checkbox, checked) ->
     if checkbox?
@@ -57,8 +53,6 @@ class TableRowView extends HTMLElement
     e.stopPropagation()
 
   select: (value) ->
-    #@selectButton.prop("checked", value)
-    #@selectButton.val(value)
     @setChecked @selectButton, value
     @select_(value)
 
@@ -79,13 +73,11 @@ class TableRowView extends HTMLElement
       value = values[i]
       if !value?
         value = ''
-      #$(@editors[i]).val(value)
       @editors[i].getModel().setText(value);
 
   getValues: ->
     values = [];
     for editor in @editors
-      #values.push($(editor).val())
       values.push(editor.getModel().getText());
     return values;
 
