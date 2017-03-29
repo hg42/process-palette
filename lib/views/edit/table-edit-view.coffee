@@ -51,10 +51,8 @@ class TableEditView extends View
 
   getRows: ->
     rows = [];
-
     for rowView in @rowViews
       rows.push(rowView.getValues());
-
     return rows;
 
   setRows: (rows) ->

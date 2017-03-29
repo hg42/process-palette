@@ -19,7 +19,11 @@ class TableRowView extends HTMLElement
 
     for column in [0...@columnCount]
       td = document.createElement("td");
-      editor = new TextEditorView(mini: true);
+      editor = new TextEditorView();
+      editor.addClass('multi-line-editor');
+      editor.getModel().setSoftTabs(true);
+      editor.getModel().setSoftWrapped(true);
+      editor.getModel().setLineNumberGutterVisible(false);
       #editor = $$ ->
       #  @textarea {class: "input-textarea", rows: 1}
       jtd = $(td);
@@ -41,13 +45,21 @@ class TableRowView extends HTMLElement
     #$(@).on 'mousedown', (e) -> e.preventDefault();
     #$(@).on 'mouseup', (e) -> e.preventDefault();
 
+  setChecked: (checkbox, checked) ->
+    if checkbox?
+      if !checked?
+        checked = false
+      if checked != checkbox.is(":checked")
+        checkbox.trigger("click");
+
   clickSelect: (e) ->
     @select_($(@).find(":checked").length > 0)
     e.stopPropagation()
 
   select: (value) ->
     #@selectButton.prop("checked", value)
-    @selectButton.val(value)
+    #@selectButton.val(value)
+    @setChecked @selectButton, value
     @select_(value)
 
   select_: (value) ->
