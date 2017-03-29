@@ -5,21 +5,23 @@ class TableRowView extends HTMLElement
 
   initialize: (@tableView, @columnCount) ->
 
-    checkElement = document.createElement("td");
-    jcheck = $(checkElement);
-    checkButton = $$ ->
-      @input {type: 'checkbox', class: "select", checked: true}
-    checkButton.click (e) => @check(e);
-    #checkButton.on 'mousedown', (e) -> e.preventDefault();
-    #checkButton.on 'mouseup', (e) -> e.preventDefault();
-    jcheck.append(checkButton);
-    @appendChild(checkElement);
+    selectElement = document.createElement("td");
+    jselect = $(selectElement);
+    @selectButton = $$ ->
+      @input {type: 'checkbox', class: "select input-checkbox"}
+    @selectButton.click (e) => @clickSelect(e);
+    #@selectButton.on 'mousedown', (e) -> e.preventDefault();
+    #@selectButton.on 'mouseup', (e) -> e.preventDefault();
+    jselect.append(@selectButton);
+    @appendChild(selectElement);
 
     @editors = [];
 
     for column in [0...@columnCount]
       td = document.createElement("td");
       editor = new TextEditorView(mini: true);
+      #editor = $$ ->
+      #  @textarea {class: "input-textarea", rows: 1}
       jtd = $(td);
       jtd.append(editor);
       @appendChild(td);
@@ -28,28 +30,24 @@ class TableRowView extends HTMLElement
     deleteElement = document.createElement("td");
     jdelete = $(deleteElement);
     deleteButton = $$ ->
-      @button {class: "btn btn-sm icon icon-x delete"}
+      @button {class: "btn btn-sm btn-warning inline-block-tight icon icon-x delete"}
     deleteButton.click => @delete();
     deleteButton.on 'mousedown', (e) -> e.preventDefault();
     jdelete.append(deleteButton);
     @appendChild(deleteElement);
 
-    $(@).on 'click', (e) => @tableView.move(@) if @ == e.currentTarget
+    #$(@).on 'click', (e) => @tableView.move(@) if @ == e.currentTarget
+    $(@).click (e) => @tableView.move(@) if @ == e.currentTarget
+    #$(@).on 'mousedown', (e) -> e.preventDefault();
+    #$(@).on 'mouseup', (e) -> e.preventDefault();
 
-  check: (e) ->
+  clickSelect: (e) ->
     @select_($(@).find(":checked").length > 0)
     e.stopPropagation()
 
   select: (value) ->
-    checkbox = $(@).find(".select")
-    console.log ["select", checkbox]
-    setTimeout(
-      (->
-        console.log ["setTimeout", checkbox]
-        checkbox.prop("checked", value)
-        ),
-      3000
-      )
+    #@selectButton.prop("checked", value)
+    @selectButton.val(value)
     @select_(value)
 
   select_: (value) ->
@@ -66,19 +64,17 @@ class TableRowView extends HTMLElement
 
   setValues: (values) ->
     for i in [0 ... values.length]
-      value = values[i];
-
+      value = values[i]
       if !value?
-        value = '';
-
+        value = ''
+      #$(@editors[i]).val(value)
       @editors[i].getModel().setText(value);
 
   getValues: ->
     values = [];
-
     for editor in @editors
+      #values.push($(editor).val())
       values.push(editor.getModel().getText());
-
     return values;
 
 module.exports = document.registerElement("table-row-view", prototype: TableRowView.prototype, extends: "tr")
