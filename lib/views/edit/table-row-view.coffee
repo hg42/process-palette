@@ -37,7 +37,8 @@ class TableRowView extends HTMLElement
     @appendChild(deleteElement);
 
     $(@).click (e) =>
-      if @.name == e.target.name or @.name == e.target.parentElement?.name
+      jtarget = $(e.target)
+      if jtarget.is("tr") or jtarget.is("td")
         @tableView.move(@)
         e.stopPropagation()
 
