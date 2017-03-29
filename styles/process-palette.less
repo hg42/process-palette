@@ -3,6 +3,7 @@
 // See https://github.com/atom/atom-dark-ui/blob/master/styles/ui-variables.less
 // for a full listing of what's available.
 @import "ui-variables";
+@import 'syntax-variables';
 
 .process-palette-split-view {
   width: 100%;
@@ -249,31 +250,46 @@
 
   border: 1px solid @tool-panel-border-color;
 
-  // .table-view.items-selected {
-  //   background: #ddd;
-  //   tr {
-  //     background: none;
-  //     padding-bottom: 3px;
-  //     margin-bottom: 0px;
-  //     &:hover {
-  //       border-bottom: 3px solid @syntax-cursor-color;
-  //       padding-bottom: 6px;
-  //       margin-bottom: 6px;
-  //       cursor: crosshair;
-  //       td :not([type=checkbox]) {
-  //         cursor:not-allowed;
-  //         pointer-events:none;
-  //       }
-  //     }
-  //     &.selected {
-  //       background: @background-color-selected;
-  //       &:hover {
-  //         cursor: inherit;
-  //         border-bottom: none;
-  //       }
-  //     }
-  //   }
-  // }
+  tr {
+    vertical-align: top;
+  }
+  .table-view.items-selected {
+    //background: @background-color-highlight;
+    tr {
+      background: none;
+      padding-bottom: 3px;
+      margin-bottom: 0px;
+      td {
+        position: relative;
+        height: 100%;
+        :not(.select) * {
+          color: fadeout(@text-color, 70%);
+        }
+      }
+      td button {
+        visibility: hidden;
+      }
+      &:hover {
+        //outline-bottom: 2px solid @syntax-cursor-color;
+        border-bottom: 2px solid @syntax-cursor-color;
+        //border-bottom: 2px solid @button-background-color-selected;
+        //padding-bottom: 12px;
+        //cursor: crosshair;
+        cursor: pointer;
+        td :not(.select) {
+          //cursor:not-allowed;
+          pointer-events:none;
+        }
+      }
+      &.selected {
+        background: @background-color-selected;
+        &:hover {
+          cursor: inherit;
+          border-bottom: none;
+        }
+      }
+    }
+  }
 
   table {
     width: 100%;
@@ -290,10 +306,10 @@
   // }
 
   td {
-    padding-top: 2px;
+    padding-top: 3px;
     padding-left: 3px;
     padding-right: 3px;
-    padding-bottom: 2px;
+    padding-bottom: 3px;
   }
 
   td atom-text-editor[mini] {
