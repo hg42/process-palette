@@ -155,6 +155,7 @@ class ProjectController
     if !config.flags?
       config.flags = "i";
 
+    #config.flags += "x" if config.expression.indexOf("\n") >= 0  # not available in stadard javascript regexp
     config.isLineExpression = config.expression.indexOf("^") == 0
     config.isPathExpression = config.expression.indexOf("(path)") >= 0
     config.isInlineExpression = not config.isLineExpression and not config.isPathExpression
@@ -177,6 +178,7 @@ class ProjectController
 
       config.expression = config.expression.replace("(path)", "(" + config.path + ")");
       config.expression = config.expression.replace("(line)", "(\\d+)");
+      config.expression = config.expression.replace(/\n/g, ""); # cheap solution to missing x-flag
 
       try
         return new PathPattern(config);
