@@ -4,10 +4,10 @@
       "expression": "(path):(line)"
     },
     "file_line": {
-      "expression": "(?:\\bfile:? +|\\bsource:? +|\\bat:? +)?['\"]?(path)['\"]?.*\\bline +(line)"
+      "expression": "(?:\n\\bfile:?\\s+|\n\\bsource:?\\s+|\n\\bat:?\\s+\n)?\n['\"]?(path)['\"]?.*\\bline\\s+(line)"
     },
     "file_paren_line": {
-      "expression": "(?:\\bfile:? +|\\bsource:? +|\\bat:? +)?['\"]?(path)['\"]? *[(\\[](line)[\\])]"
+      "expression": "(?:\n\\bfile:?\\s+|\n\\bsource:?\\s+|\n\\bat:?\\s+\n)?\n['\"]?(path)['\"]?\\s*[(\\[](line)[\\])]"
     },
     "path": {
       "expression": "['\"]?(path)['\"]?"

@@ -54,6 +54,7 @@ for file in fs.readdirSync(test_base)
 
     describe "output test in " + path, ->
       test_name = file.replace(re_test_file, "")
+      test_name = test_name.replace(/\..*$/, "")
       test_file = path
       process.chdir(test_project)
 
