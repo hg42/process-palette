@@ -44,7 +44,8 @@ class TableEditView extends View
   onDragStart: (e) ->
     #console.log ["onDragStart", e]
     #e.originalEvent.dataTransfer.setData("Text", e.target);
-    image   = e.target
+    image = document.createElement('img')
+    image.src = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7'
     xOffset = 0
     yOffset = 0
     e.originalEvent.dataTransfer.effectAllowed = "move"
