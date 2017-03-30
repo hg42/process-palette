@@ -71,6 +71,37 @@ class TableEditView extends View
 
   clickHeader: -> @move(null)
 
+  startDragging: (e) ->
+    console.log ["startDragging", e]
+    dragArea = $(@)
+    dragArea.addClass 'process-palette-dragging'
+    #@subs.add dragArea, '[contenteditable]',         => @stopEditing()
+    #$(@).mouseup (e) => @stopDragging e
+    dragArea.mouseup (e) => @stopDragging e
+    #$(@).mousemove (e) => @whileDragging e
+    dragArea.mousemove (e) => @whileDragging e
+    #@subs.add @,     'mousedown', '.new-btn', (e) => @newBtnMouseDown e
+    #@subs.add @,     'mousedown', '.btn',     (e) => @btnMousedown    e
+    #@subs.add @,     'keydown',   '.btn',     (e) => @btnKeyDown      e
+    #@subs.add @,     'click',     '.btn',     (e) => @btnClick        e
+
+  stopDragging: (e) ->
+    console.log ["stopDragging", e]
+    dragArea = $(@)
+    dragArea.removeClass 'process-palette-dragging'
+    #$(@).off "mouseup"
+    dragArea.off "mouseup"
+    #$(@).off "mousemove"
+    dragArea.off "mousemove"
+    target = $(e.target).parentsUntil("tr").parent()
+    console.log ["drop on", target, target[0]]
+    #console.log target[0].editors[0].getModel().getText()
+    #@tableView.move(target[0])
+
+  whileDragging: (e) ->
+    #console.log ["whileDragging", e]
+    #e.stopPropagation()
+
   move: (insertionPoint) ->
     rows = []
     putaside = []
@@ -83,16 +114,17 @@ class TableEditView extends View
       if selected
         rowView.select(false)
 
+      if rowView == insertionPoint              # at insertion point
+        insertionPointPassed = true
+        for row in putaside                     #     add remembered rows
+          rows.push(putaside.shift())
+
       if not insertionPointPassed               # up to insertion point
         if selected
           putaside.push(rowView.getValues())    #     remember selected rows
         else
           rows.push(rowView.getValues())        #     add other rows
 
-        if rowView == insertionPoint                 # at insertion point
-          insertionPointPassed = true
-          for row in putaside                   #     add remembered rows
-            rows.push(putaside.shift())
       else                                      # after insertion point
         if selected
           rows.push(rowView.getValues())        #     add selected rows

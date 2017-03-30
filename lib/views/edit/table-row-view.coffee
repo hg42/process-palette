@@ -36,10 +36,15 @@ class TableRowView extends HTMLElement
     jdelete.append(deleteButton);
     @appendChild(deleteElement);
 
-    $(@).click (e) =>
-      jtarget = $(e.target)
-      if jtarget.is("tr") or jtarget.is("td")
-        @tableView.move(@)
+    $(@).mousedown (e) =>
+      console.log ["mousedown", @, e]
+      #jtarget = $(e.target)
+      #if jtarget.is("tr") or jtarget.is("td")
+        #@tableView.move(@)
+      selected = $(@).is('.selected')
+      select = $(e.target).is('.select') or $(e.target).find(".select").length
+      if selected and not select
+        @tableView.startDragging e
         e.stopPropagation()
 
   setChecked: (checkbox, checked) ->

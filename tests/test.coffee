@@ -1,18 +1,25 @@
 
 console.log "---------- hello"
 
-re = ""
-re += "(?:\n\\bfile:?\\s+|\n\\bsource:?\\s+|\n\\bat:?\\s+\n)?"
-re += "['\"]?([-\\w/+.]+)['\"]?\n"
-re += "\\s*[(](\\d+)[)]"
-re = re.replace(/\n/g, "")
+if 1
+  {$, $$} = require 'atom-space-pen-views'
 
-console.log re
+  console.log $.fn.jquery
 
-re = new RegExp(re)
+if 0
 
-text = "xxx ../output-tests/test-multiple-paths.txt (4) yyy"
+  re = ""
+  re += "(?:\n\\bfile:?\\s+|\n\\bsource:?\\s+|\n\\bat:?\\s+\n)?"
+  re += "['\"]?([-\\w/+.]+)['\"]?\n"
+  re += "\\s*[(](\\d+)[)]"
+  re = re.replace(/\n/g, "")
 
-matches = re.exec(text)
+  console.log re
 
-matches
+  re = new RegExp(re)
+
+  text = "xxx ../output-tests/test-multiple-paths.txt (4) yyy"
+
+  matches = re.exec(text)
+
+  console.log matches
