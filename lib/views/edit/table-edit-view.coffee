@@ -19,16 +19,77 @@ class TableEditView extends View
             for column in columns
               @col {style:"width:#{colWidth}%"}
           @thead =>
-            @tr click: 'clickHeader', =>
+            @tr =>
               @th ' '
               for column in columns
                 @th column, {class: 'text-highlight'}
           @tbody {outlet: 'tableBody'}
-      @div {class: 'button-view'}, =>
+      @div {class: 'button-view drop-target'}, =>
         @button 'Add', {class: "btn btn-sm", outlet: 'addButton', click: 'addEmptyRow'}
 
   initialize: ->
     @addButton.on 'mousedown', (e) -> e.preventDefault();
+    @dragInit()
+
+
+  dragInit: ->
+    $(@).on "dragstart", (e) => @onDragStart? e
+    $(@).on "dragend",   (e) => @onDragEnd?   e
+    $(@).on "drag",      (e) => @onDrag?      e
+    $(@).on "dragenter", (e) => @onDragEnter? e
+    $(@).on "dragleave", (e) => @onDragLeave? e
+    $(@).on "dragover",  (e) => @onDragOver?  e
+    $(@).on "drop",      (e) => @onDrop?      e
+
+  onDragStart: (e) ->
+    #console.log ["onDragStart", e]
+    #e.originalEvent.dataTransfer.setData("Text", e.target);
+    image   = e.target
+    xOffset = 0
+    yOffset = 0
+    e.originalEvent.dataTransfer.effectAllowed = "move"
+    e.originalEvent.dataTransfer.dropEffect    = "move"
+    e.originalEvent.dataTransfer.setDragImage(image, xOffset, yOffset)
+
+  onDragEnd:   (e) ->
+    #console.log ["onDragEnd",   e]
+    target = @dropTarget(e)
+    target.removeClass("current-drop-target")
+
+  onDrag:      (e) ->
+    #console.log ["onDrag",      e]
+
+  onDragEnter: (e) ->
+    target = @dropTarget(e)
+    #console.log ["onDragEnter", e, target[0]]
+    target.addClass("current-drop-target")
+
+  onDragLeave: (e) ->
+    target = @dropTarget(e)
+    #console.log ["onDragLeave", e, target[0]]
+    target.removeClass("current-drop-target")
+
+  onDragOver:  (e) ->
+    #console.log ["onDragOver",  e]
+    target = @dropTarget(e)
+    if target.length > 0
+      #console.log ["drag over target found"]
+      e.preventDefault()
+
+  onDrop:  (e) ->
+    #console.log ["onDrop",  e]
+    target = @dropTarget(e)
+    target.removeClass("current-drop-target")
+    #console.log ["drop on", target]
+    if target.length > 0
+      #data = e.originalEvent.dataTransfer.getData("Text");
+      #console.log ["drop target found"]
+      e.preventDefault()
+      @move(target[0])
+
+  dropTarget: (e) ->
+    return $(e.target).closest(".drop-target")
+
 
   reset: ->
     while @rowViews.length > 0
@@ -69,39 +130,6 @@ class TableEditView extends View
     else
       tableView.removeClass "items-selected"
 
-  clickHeader: -> @move(null)
-
-  startDragging: (e) ->
-    console.log ["startDragging", e]
-    dragArea = $(@)
-    dragArea.addClass 'process-palette-dragging'
-    #@subs.add dragArea, '[contenteditable]',         => @stopEditing()
-    #$(@).mouseup (e) => @stopDragging e
-    dragArea.mouseup (e) => @stopDragging e
-    #$(@).mousemove (e) => @whileDragging e
-    dragArea.mousemove (e) => @whileDragging e
-    #@subs.add @,     'mousedown', '.new-btn', (e) => @newBtnMouseDown e
-    #@subs.add @,     'mousedown', '.btn',     (e) => @btnMousedown    e
-    #@subs.add @,     'keydown',   '.btn',     (e) => @btnKeyDown      e
-    #@subs.add @,     'click',     '.btn',     (e) => @btnClick        e
-
-  stopDragging: (e) ->
-    console.log ["stopDragging", e]
-    dragArea = $(@)
-    dragArea.removeClass 'process-palette-dragging'
-    #$(@).off "mouseup"
-    dragArea.off "mouseup"
-    #$(@).off "mousemove"
-    dragArea.off "mousemove"
-    target = $(e.target).parentsUntil("tr").parent()
-    console.log ["drop on", target, target[0]]
-    #console.log target[0].editors[0].getModel().getText()
-    #@tableView.move(target[0])
-
-  whileDragging: (e) ->
-    #console.log ["whileDragging", e]
-    #e.stopPropagation()
-
   move: (insertionPoint) ->
     rows = []
     putaside = []
@@ -125,11 +153,12 @@ class TableEditView extends View
         else
           rows.push(rowView.getValues())        #     add other rows
 
-      else                                      # after insertion point
+      else                                      # from insertion point
         if selected
           rows.push(rowView.getValues())        #     add selected rows
         else
           putaside.push(rowView.getValues())    #     remember normal rows
+
                                                 # after all
     for row in putaside                         #     add remembered rows
       rows.push(putaside.shift())

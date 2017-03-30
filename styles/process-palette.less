@@ -250,47 +250,6 @@
 
   border: 1px solid @tool-panel-border-color;
 
-  // tr {
-  //   vertical-align: top;
-  // }
-  // .table-view.items-selected {
-  //   //background: @background-color-highlight;
-  //   tr {
-  //     background: none;
-  //     padding-bottom: 3px;
-  //     margin-bottom: 0px;
-  //     td {
-  //       position: relative;
-  //       height: 100%;
-  //       :not(.select) * {
-  //         color: fadeout(@text-color, 70%);
-  //       }
-  //     }
-  //     td button {
-  //       visibility: hidden;
-  //     }
-  //     &:hover {
-  //       //outline-bottom: 2px solid @syntax-cursor-color;
-  //       border-bottom: 2px solid @syntax-cursor-color;
-  //       //border-bottom: 2px solid @button-background-color-selected;
-  //       //padding-bottom: 12px;
-  //       //cursor: crosshair;
-  //       cursor: pointer;
-  //       td :not(.select) {
-  //         //cursor:not-allowed;
-  //         pointer-events:none;
-  //       }
-  //     }
-  //     &.selected {
-  //       background: @background-color-selected;
-  //       &:hover {
-  //         cursor: inherit;
-  //         border-bottom: none;
-  //       }
-  //     }
-  //   }
-  // }
-
   table {
     width: 100%;
     height: 100%;
@@ -410,4 +369,53 @@
 
   }
 
+}
+
+
+// drag and drop
+
+.process-palette-table-edit-view {
+
+  tr {
+    vertical-align: top;
+  }
+
+  .drop-target {
+    //outline: 1px dotted blue;
+    //border-top: 2px solid #cccccc;
+    //margin-top: 2px;
+    //border-top: none;
+  }
+
+  .current-drop-target {
+    border-top: 2px dotted @syntax-cursor-color;
+    //margin-top: 0px;
+  }
+
+  .items-selected {
+    background: fadeout(@app-background-color, 60%);
+    button {
+      visibility: hidden;
+    }
+    tr {
+      background: none;
+      padding-bottom: 3px;
+      margin-bottom: 0px;
+      td {
+        position: relative;
+        height: 100%;
+        :not(.select) {
+          color: fadeout(@text-color, 60%);
+          pointer-events:none;
+        }
+      }
+      &.selected {
+        background: @background-color-selected;
+        &:hover {
+          cursor:move;
+          //border-bottom: none;
+        }
+      }
+    }
+  }
 }

@@ -5,6 +5,8 @@ class TableRowView extends HTMLElement
 
   initialize: (@tableView, @columnCount) ->
 
+    $(@).addClass 'drop-target'
+
     selectElement = document.createElement("td");
     jselect = $(selectElement);
     @selectButton = $$ ->
@@ -36,17 +38,6 @@ class TableRowView extends HTMLElement
     jdelete.append(deleteButton);
     @appendChild(deleteElement);
 
-    $(@).mousedown (e) =>
-      console.log ["mousedown", @, e]
-      #jtarget = $(e.target)
-      #if jtarget.is("tr") or jtarget.is("td")
-        #@tableView.move(@)
-      selected = $(@).is('.selected')
-      select = $(e.target).is('.select') or $(e.target).find(".select").length
-      if selected and not select
-        @tableView.startDragging e
-        e.stopPropagation()
-
   setChecked: (checkbox, checked) ->
     if checkbox?
       if !checked?
@@ -65,9 +56,11 @@ class TableRowView extends HTMLElement
   select_: (value) ->
     if value
       @selected = true
+      $(@).attr("draggable", true)
       $(@).addClass "selected"
     else
       @selected = false
+      $(@).attr("draggable", false)
       $(@).removeClass "selected"
     @tableView.updateView()
 
