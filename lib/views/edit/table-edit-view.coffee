@@ -4,33 +4,76 @@ TableRowView = require './table-row-view'
 module.exports =
 class TableEditView extends View
 
-  constructor: (@columns) ->
-    super(@columns);
+  constructor: (@columns, @draggable = false) ->
+    super(@columns, @draggable);
     @rowViews = [];
 
-  @content: (columns) ->
+  @content: (columns, draggable) ->
     colWidth = 100 / columns.length;
 
     @div {class: 'process-palette-table-edit-view'}, =>
       @div {class: 'table-view'}, =>
         @table =>
           @colgroup =>
-            @col {style:"width:0%"}
+            if draggable
+              @col {style:"width:0%"}
             for column in columns
               @col {style:"width:#{colWidth}%"}
+            @col {style:"width:0%"}
           @thead =>
             @tr =>
-              @th ' '
+              if draggable
+                @th 'select'
               for column in columns
                 @th column, {class: 'text-highlight'}
+              @th 'delete'
           @tbody {outlet: 'tableBody'}
       @div {class: 'button-view drop-target'}, =>
         @button 'Add', {class: "btn btn-sm", outlet: 'addButton', click: 'addEmptyRow'}
 
   initialize: ->
     @addButton.on 'mousedown', (e) -> e.preventDefault();
-    @dragInit()
+    if @draggable
+      @dragInit()
 
+  reset: ->
+    while @rowViews.length > 0
+      @removeRowView(@rowViews[0]);
+
+  addRow: (row) ->
+    rowView = @addEmptyRow();
+    rowView.setValues(row);
+
+  addEmptyRow: ->
+    rowView = new TableRowView();
+    rowView.initialize(@, @getColumnCount());
+    @tableBody[0].appendChild(rowView);
+    @rowViews.push(rowView);
+    return rowView;
+
+  removeRowView: (rowView) ->
+    @rowViews.splice(@rowViews.indexOf(rowView), 1);
+    @tableBody[0].removeChild(rowView);
+
+  getRows: ->
+    rows = [];
+    for rowView in @rowViews
+      rows.push(rowView.getValues());
+    return rows;
+
+  setRows: (rows) ->
+    for rowView in @rowViews
+      rowView.setValues(rows.shift());
+
+  getColumnCount: ->
+    return @columns.length;
+
+  updateView: ->
+    tableView = $(@).find(".table-view")
+    if tableView.find(":checked").length
+      tableView.addClass "items-selected"
+    else
+      tableView.removeClass "items-selected"
 
   dragInit: ->
     $(@).on "dragstart", (e) => @onDragStart? e
@@ -44,6 +87,7 @@ class TableEditView extends View
   onDragStart: (e) ->
     #console.log ["onDragStart", e]
     #e.originalEvent.dataTransfer.setData("Text", e.target);
+    # use empty 1px transparent image as drag image
     image = document.createElement('img')
     image.src = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7'
     xOffset = 0
@@ -90,46 +134,6 @@ class TableEditView extends View
 
   dropTarget: (e) ->
     return $(e.target).closest(".drop-target")
-
-
-  reset: ->
-    while @rowViews.length > 0
-      @removeRowView(@rowViews[0]);
-
-  addRow: (row) ->
-    rowView = @addEmptyRow();
-    rowView.setValues(row);
-
-  addEmptyRow: ->
-    rowView = new TableRowView();
-    rowView.initialize(@, @getColumnCount());
-    @tableBody[0].appendChild(rowView);
-    @rowViews.push(rowView);
-    return rowView;
-
-  removeRowView: (rowView) ->
-    @rowViews.splice(@rowViews.indexOf(rowView), 1);
-    @tableBody[0].removeChild(rowView);
-
-  getRows: ->
-    rows = [];
-    for rowView in @rowViews
-      rows.push(rowView.getValues());
-    return rows;
-
-  setRows: (rows) ->
-    for rowView in @rowViews
-      rowView.setValues(rows.shift());
-
-  getColumnCount: ->
-    return @columns.length;
-
-  updateView: ->
-    tableView = $(@).find(".table-view")
-    if tableView.find(":checked").length
-      tableView.addClass "items-selected"
-    else
-      tableView.removeClass "items-selected"
 
   move: (insertionPoint) ->
     rows = []

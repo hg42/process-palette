@@ -28,7 +28,9 @@ class PatternEditView extends View
         @span ' column is optional. If it is left out then the built-in expression will be used for the path, '
         @span 'but a custom expression can be specified in case the built-in one isn\'t sufficient.'
         @tag 'p'
-        @subview 'tableView', new TableEditView(['Name', 'Expression', 'Path RegEx'])
+        @subview 'tableView', new TableEditView(
+                                    ['Name', 'Expression', 'Path RegEx'],
+                                    true)
 
   initialize: ->
     patterns = @config.patterns;

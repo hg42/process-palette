@@ -5,15 +5,17 @@ class TableRowView extends HTMLElement
 
   initialize: (@tableView, @columnCount) ->
 
-    $(@).addClass 'drop-target'
+    if @tableView.draggable
+      $(@).addClass 'drop-target'
 
-    selectElement = document.createElement("td");
-    jselect = $(selectElement);
-    @selectButton = $$ ->
-      @input {type: 'checkbox', class: "select input-checkbox"}
-    @selectButton.click (e) => @clickSelect(e);
-    jselect.append(@selectButton);
-    @appendChild(selectElement);
+      selectElement = document.createElement("td");
+      jselect = $(selectElement);
+      @selectButton = $$ ->
+        @input {type: 'checkbox', class: "select input-checkbox"}
+      @selectButton.click (e) => @clickSelect(e);
+      @selectButton.on 'mousedown', (e) -> e.preventDefault();  # prevent getting focus???
+      jselect.append(@selectButton);
+      @appendChild(selectElement);
 
     @editors = [];
 
@@ -34,7 +36,7 @@ class TableRowView extends HTMLElement
     deleteButton = $$ ->
       @button {class: "btn btn-sm btn-warning inline-block-tight icon icon-x delete"}
     deleteButton.click => @delete();
-    deleteButton.on 'mousedown', (e) -> e.preventDefault();
+    deleteButton.on 'mousedown', (e) -> e.preventDefault();  # prevent getting focus???
     jdelete.append(deleteButton);
     @appendChild(deleteElement);
 
@@ -56,12 +58,14 @@ class TableRowView extends HTMLElement
   select_: (value) ->
     if value
       @selected = true
-      $(@).attr("draggable", true)
       $(@).addClass "selected"
+      if @tableView.draggable
+        $(@).attr("draggable", true)
     else
       @selected = false
-      $(@).attr("draggable", false)
       $(@).removeClass "selected"
+      if @tableView.draggable
+        $(@).attr("draggable", false)
     @tableView.updateView()
 
   delete: ->
