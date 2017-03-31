@@ -1,44 +1,38 @@
-{$, $$, TextEditorView} = require 'atom-space-pen-views'
+{$, View, TextEditorView} = require 'atom-space-pen-views'
 
 module.exports =
-class TableRowView extends HTMLElement
+class TableRowView extends View
 
-  initialize: (@tableView, @columnCount) ->
+  constructor: (@tableView, @columnCount) ->
+    @editors = [];
+    super(@, @columnCount)
 
+  @content: (self, columnCount) ->
+    @tr {class: "table-row"}, =>
+      if self.tableView.draggable
+        @td {outlet: "selectElement"}, =>
+          @input {outlet: "selectButton", type: 'checkbox', class: "select input-checkbox"}
+
+      for column in [0...columnCount]
+        @td =>
+          editor = new TextEditorView();
+          editor.addClass('multi-line-editor');
+          editor.getModel().setSoftTabs(true);
+          editor.getModel().setSoftWrapped(true);
+          editor.getModel().setLineNumberGutterVisible(false);
+          self.editors.push(editor);
+          @subview null, editor
+
+      @td =>
+        @button {outlet: "deleteButton", class: "btn btn-sm btn-warning inline-block-tight icon icon-x delete"}
+
+  initialize: ->
     if @tableView.draggable
-      $(@).addClass 'drop-target'
-
-      selectElement = document.createElement("td");
-      jselect = $(selectElement);
-      @selectButton = $$ ->
-        @input {type: 'checkbox', class: "select input-checkbox"}
+      @addClass 'drop-target'
       @selectButton.click (e) => @clickSelect(e);
       @selectButton.on 'mousedown', (e) -> e.preventDefault();  # prevent getting focus???
-      jselect.append(@selectButton);
-      @appendChild(selectElement);
-
-    @editors = [];
-
-    for column in [0...@columnCount]
-      td = document.createElement("td");
-      editor = new TextEditorView();
-      editor.addClass('multi-line-editor');
-      editor.getModel().setSoftTabs(true);
-      editor.getModel().setSoftWrapped(true);
-      editor.getModel().setLineNumberGutterVisible(false);
-      jtd = $(td);
-      jtd.append(editor);
-      @appendChild(td);
-      @editors.push(editor);
-
-    deleteElement = document.createElement("td");
-    jdelete = $(deleteElement);
-    deleteButton = $$ ->
-      @button {class: "btn btn-sm btn-warning inline-block-tight icon icon-x delete"}
-    deleteButton.click => @delete();
-    deleteButton.on 'mousedown', (e) -> e.preventDefault();  # prevent getting focus???
-    jdelete.append(deleteButton);
-    @appendChild(deleteElement);
+      @deleteButton.click => @delete();
+      @deleteButton.on 'mousedown', (e) -> e.preventDefault();  # prevent getting focus???
 
   setChecked: (checkbox, checked) ->
     if checkbox?
@@ -83,5 +77,3 @@ class TableRowView extends HTMLElement
     for editor in @editors
       values.push(editor.getModel().getText());
     return values;
-
-module.exports = document.registerElement("table-row-view", prototype: TableRowView.prototype, extends: "tr")

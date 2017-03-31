@@ -29,7 +29,7 @@ class TableEditView extends View
               @th 'delete'
           @tbody {outlet: 'tableBody'}
       @div {class: 'button-view drop-target'}, =>
-        @button 'Add', {class: "btn btn-sm", outlet: 'addButton', click: 'addEmptyRow'}
+        @button 'Add', {outlet: 'addButton', class: "btn btn-sm", click: 'addEmptyRow'}
 
   initialize: ->
     @addButton.on 'mousedown', (e) -> e.preventDefault();
@@ -45,15 +45,14 @@ class TableEditView extends View
     rowView.setValues(row);
 
   addEmptyRow: ->
-    rowView = new TableRowView();
-    rowView.initialize(@, @getColumnCount());
-    @tableBody[0].appendChild(rowView);
+    rowView = new TableRowView(@, @getColumnCount());
+    @tableBody.append(rowView);
     @rowViews.push(rowView);
     return rowView;
 
   removeRowView: (rowView) ->
     @rowViews.splice(@rowViews.indexOf(rowView), 1);
-    @tableBody[0].removeChild(rowView);
+    rowView.remove();
 
   getRows: ->
     rows = [];
@@ -135,19 +134,20 @@ class TableEditView extends View
   dropTarget: (e) ->
     return $(e.target).closest(".drop-target")
 
-  move: (insertionPoint) ->
+  move: (droppedBeforeElement) ->
     rows = []
     putaside = []
 
-    # find insertionPoint or set it at top (= already passed)
-    insertionPointPassed = not insertionPoint
+    # find droppedBeforeElement or set it at top (= already passed)
+    insertionPointPassed = not droppedBeforeElement
 
     for rowView in @rowViews
+      rowElement = rowView[0]
       selected = rowView.selected
       if selected
         rowView.select(false)
 
-      if rowView == insertionPoint              # at insertion point
+      if rowElement == droppedBeforeElement     # at insertion point
         insertionPointPassed = true
         for row in putaside                     #     add remembered rows
           rows.push(putaside.shift())
