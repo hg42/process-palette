@@ -57,6 +57,7 @@
     "path_file_line",
     "path_file_paren_line",
     "path",
+    "default",
     "line_trace_begin",
     "line_trace_end",
     "inline_trace_result",
