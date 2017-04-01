@@ -1,13 +1,3 @@
-TODO: JSON map vs. list
-
-I would prefer an array.
-
-Maintaining the file manually would be inconvenient, when saving  the same thing into two different structures (map for values and list for sequence).
-
-I understand this breaks compatibility.
-Migrating is unidirectional, going back to an older version would not work (I think this would be ok, if the user is notified).
-We could also leave it as it is now (because it works) for some versions/time (hoping it doesn't break) and implement reading both variants. When later the config file is upgraded from the map to a list, going back would be possible in this range of versions.
-
 TODO: defaultPatterns:
 
 The whole reason to have default patterns is to always use the same patterns for all commands (that's how I always used this). Meaning no work for the usual case and some work for special cases.
@@ -17,10 +7,8 @@ So, I think a selection of patterns is not necessary.
 Additionally, the sequence mostly depends on the kind of patterns. It's a kind of priority list.
 You could create patterns that don't conflict. But a priority list is simpler to understand and maintain.
 
-TODO: pattern selection in command editor
+TODO: pattern selection in command editor (drop it? use groups? words+popup-list?)
 
-For command configuration, in cases where a subset of patterns has to be used, I would probably use a simple string field with comma separated names.
-An empty field means "use defaults", or you may use an additional checkbox to enable this field.
-There could eventually be a button next to it (three dots?) with a popup multi-select list (or checkboxes) for the patterns you want (communicating bidirectional with the string value).
+TODO: patterns-JSON: map -> list, migrate and popup message
 
 TODO: .process-palette-output-panel does not work with padding etc. (resizer?)

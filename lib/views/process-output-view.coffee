@@ -195,7 +195,7 @@ class ProcessOutputView extends View
           matches = pattern.match(remaining)
           if matches?
             #console.log(["path match", matches.match, remaining])
-            # TODO: search in some path (active-file, projects)
+            # TODO: search in some path (active project, active-file, other projects, other open files)
             if fsp.isFileSync(matches.path)
               any_match = true
               #console.log(["path exist", matches.match, remaining])
