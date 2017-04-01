@@ -23,7 +23,7 @@ class ProcessOutputView extends View
 
   @content: (main, processController) ->
     @div =>
-      @div {class:"process-palette-process", style:'margin-bottom:5px', outlet:"header"}, =>
+      @div {class:"process-palette-process", outlet:"header"}, =>
         @button {class:'btn btn-xs icon-three-bars inline-block-tight', outlet:'showListViewButton', click:'showListView'}
         @button {class:'btn btn-xs icon-playback-play inline-block-tight', outlet:'runButton', click:'runButtonPressed'}
         @span {class:'header inline-block text-highlight', outlet: 'commandName'}

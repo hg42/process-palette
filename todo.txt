@@ -22,3 +22,5 @@ TODO: pattern selection in command editor
 For command configuration, in cases where a subset of patterns has to be used, I would probably use a simple string field with comma separated names.
 An empty field means "use defaults", or you may use an additional checkbox to enable this field.
 There could eventually be a button next to it (three dots?) with a popup multi-select list (or checkboxes) for the patterns you want (communicating bidirectional with the string value).
+
+TODO: .process-palette-output-panel does not work with padding etc. (resizer?)
