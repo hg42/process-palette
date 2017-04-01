@@ -48,17 +48,20 @@ for file in fs.readdirSync(test_base)
     #continue
 
     workspaceElement = null
+    #test_name = null
+    #test_name = null
+    #test_file = null
 
     beforeEach ->
       workspaceElement = atom.views.getView(atom.workspace)
 
     describe "output test in " + path, ->
+
+      #console.log("test_file = " + test_file)
       test_name = file.replace(re_test_file, "")
       test_name = test_name.replace(/\..*$/, "")
       test_file = path
       process.chdir(test_project)
-
-      #console.log("test_file = " + test_file)
 
       it "runs", ->
         text = new String(fs.readFileSync(test_file))

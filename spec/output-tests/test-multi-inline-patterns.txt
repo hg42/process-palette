@@ -2,4 +2,4 @@
 
 EXPECT:
 
-<span class="exclamation" is="space-pen-span"> ! foo <span class="warning" is="space-pen-span">warning</span> <span class="error" is="space-pen-span">error</span> <span class="fail" is="space-pen-span">failure</span> <span is="space-pen-span"><span class="process-palette-path-view" click="clicked">test-multi-inline-patterns.txt:3</span></span> <span class="fail" is="space-pen-span">failure</span> <span class="error" is="space-pen-span">error</span> <span class="warning" is="space-pen-span">warning</span> bar</span>
+<span class="line_exclamation" is="space-pen-span"> ! foo <span class="inline_warning" is="space-pen-span">warning</span> <span class="inline_error" is="space-pen-span">error</span> <span class="inline_fail" is="space-pen-span">failure</span> <span is="space-pen-span"><span class="process-palette-path-view" click="clicked">test-multi-inline-patterns.txt:3</span></span> <span class="inline_fail" is="space-pen-span">failure</span> <span class="inline_error" is="space-pen-span">error</span> <span class="inline_warning" is="space-pen-span">warning</span> bar</span>

@@ -1,72 +1,75 @@
 {
   "patterns": {
-    "colon": {
+    "path_colon": {
       "expression": "(path):(line)"
     },
-    "file_line": {
-      "expression": "(?:\\bfile +|\\bat +)?['\"]?(path)['\"]?.*\\bline +(line)"
+    "path_file_line": {
+      "expression": "(?:\n\\bfile:?\\s+|\n\\bsource:?\\s+|\n\\bat:?\\s+\n)?\n['\"]?(path)['\"]?\n.*\\bline\\s+(line)"
+    },
+    "path_file_paren_line": {
+      "expression": "(?:\n\\bfile:?\\s+|\n\\bsource:?\\s+|\n\\bat:?\\s+\n)?\n['\"]?(path)['\"]?\n\\s*[(\\[](line)[\\])]"
     },
     "path": {
       "expression": "['\"]?(path)['\"]?"
     },
-    "fail": {
-      "expression": "\\bfail(ure|ed)?\\b"
-    },
-    "error": {
-      "expression": "[-\\w]*error[-\\w]*"
-    },
-    "warning": {
-      "expression": "\\bwarn(ing)?\\b"
-    },
-    "dashes": {
-      "expression": "^\\s*--"
-    },
-    "command": {
-      "expression": "^\\s*>"
-    },
-    "star": {
-      "expression": "^\\s*\\*"
-    },
-    "trace-begin": {
+    "line_trace_begin": {
       "expression": "^\\s*\\\\\\s+"
     },
-    "trace-end": {
+    "line_trace_end": {
       "expression": "^\\s*/\\s+"
     },
-    "trace-result": {
+    "inline_trace_result": {
       "expression": "(^\\s*/\\s+.*)(\\s+=\\s+.*)(.*$)"
     },
-    "exclamation": {
+    "inline_error": {
+      "expression": "[-\\w]*error[-\\w]*"
+    },
+    "inline_fail": {
+      "expression": "\\bfail(ure|ed)?\\b"
+    },
+    "inline_warning": {
+      "expression": "\\bwarn(ing)?\\b"
+    },
+    "line_dashes": {
+      "expression": "^\\s*--"
+    },
+    "line_command": {
+      "expression": "^\\s*>"
+    },
+    "line_exclamation": {
       "expression": "^\\s*!"
     },
-    "bracket": {
+    "line_star": {
+      "expression": "^\\s*\\*"
+    },
+    "line_bracket": {
       "expression": "^\\s*[[{]"
     },
-    "build": {
+    "line_build": {
       "expression": "^\\s*build"
     },
-    "at": {
+    "line_at": {
       "expression": "^\\s*at\\b"
     }
   },
   "defaultPatterns": [
-    "colon",
-    "file_line",
+    "path_colon",
+    "path_file_line",
+    "path_file_paren_line",
     "path",
-    "default",
-    "trace-begin",
-    "trace-end",
-    "trace-result",
-    "exclamation",
-    "star",
-    "dashes",
-    "command",
-    "bracket",
-    "build",
-    "at",
-    "fail",
-    "error",
-    "warning"
+    "line_trace_begin",
+    "line_trace_end",
+    "inline_trace_result",
+    "inline_error",
+    "inline_fail",
+    "inline_warning",
+    "line_dashes",
+    "line_command",
+    "line_exclamation",
+    "line_star",
+    "line_bracket",
+    "line_build",
+    "line_at"
   ],
   "commands": [
     {
@@ -88,6 +91,7 @@
       "singular": false,
       "promptToSave": false,
       "saveOption": "all",
+      "patterns": [],
       "successOutput": "{stdout}",
       "errorOutput": "{stdout}\n{stderr}",
       "fatalOutput": "Failed to execute : {fullCommand}\n{stdout}\n{stderr}",
@@ -115,6 +119,7 @@
       "singular": false,
       "promptToSave": false,
       "saveOption": "all",
+      "patterns": [],
       "successOutput": "{stdout}",
       "errorOutput": "{stdout}\n{stderr}",
       "fatalOutput": "Failed to execute : {fullCommand}\n{stdout}\n{stderr}",
@@ -142,6 +147,7 @@
       "singular": false,
       "promptToSave": false,
       "saveOption": "all",
+      "patterns": [],
       "successOutput": null,
       "errorOutput": null,
       "fatalOutput": "Failed to execute : {fullCommand}\n{stdout}\n{stderr}",
@@ -169,6 +175,7 @@
       "singular": false,
       "promptToSave": false,
       "saveOption": "all",
+      "patterns": [],
       "successOutput": null,
       "errorOutput": null,
       "fatalOutput": "Failed to execute : {fullCommand}\n{stdout}\n{stderr}",
@@ -179,7 +186,7 @@
     },
     {
       "namespace": "open",
-      "action": "workbench",
+      "action": "hg-gui",
       "command": "start thg",
       "arguments": [],
       "cwd": "{fileDirAbsPath}",
@@ -196,6 +203,7 @@
       "singular": false,
       "promptToSave": false,
       "saveOption": "all",
+      "patterns": [],
       "successOutput": null,
       "errorOutput": null,
       "fatalOutput": "Failed to execute : {fullCommand}\n{stdout}\n{stderr}",
@@ -229,8 +237,65 @@
       "singular": false,
       "promptToSave": false,
       "saveOption": "all",
+      "patterns": [],
       "successOutput": "{stdout}",
       "errorOutput": "{stdout}\n{stderr}",
+      "fatalOutput": "Failed to execute : {fullCommand}\n{stdout}\n{stderr}",
+      "successMessage": null,
+      "errorMessage": null,
+      "fatalMessage": "Failed to execute : {fullCommand}\n{stdout}\n{stderr}",
+      "menus": []
+    },
+    {
+      "namespace": "apm",
+      "action": "test",
+      "command": "apm test",
+      "arguments": [],
+      "cwd": null,
+      "inputDialogs": [],
+      "env": {},
+      "keystroke": null,
+      "stream": true,
+      "outputTarget": "panel",
+      "outputBufferSize": 80000,
+      "maxCompleted": 3,
+      "autoShowOutput": true,
+      "autoHideOutput": false,
+      "scrollLockEnabled": false,
+      "singular": false,
+      "promptToSave": false,
+      "saveOption": "all",
+      "patterns": [],
+      "successOutput": "{stdout}",
+      "errorOutput": "{stdout}\n{stderr}",
+      "fatalOutput": "Failed to execute : {fullCommand}\n{stdout}\n{stderr}",
+      "successMessage": null,
+      "errorMessage": null,
+      "fatalMessage": "Failed to execute : {fullCommand}\n{stdout}\n{stderr}",
+      "menus": []
+    },
+    {
+      "namespace": "open",
+      "action": "git-gui",
+      "command": "start smartgit {fileDirAbsPath}",
+      "arguments": [],
+      "cwd": "{fileDirAbsPath}",
+      "inputDialogs": [],
+      "env": {},
+      "keystroke": null,
+      "stream": true,
+      "outputTarget": "void",
+      "outputBufferSize": 80000,
+      "maxCompleted": 3,
+      "autoShowOutput": false,
+      "autoHideOutput": false,
+      "scrollLockEnabled": false,
+      "singular": false,
+      "promptToSave": false,
+      "saveOption": "all",
+      "patterns": [],
+      "successOutput": null,
+      "errorOutput": null,
       "fatalOutput": "Failed to execute : {fullCommand}\n{stdout}\n{stderr}",
       "successMessage": null,
       "errorMessage": null,
