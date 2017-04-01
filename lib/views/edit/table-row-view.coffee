@@ -24,7 +24,7 @@ class TableRowView extends View
           @subview null, editor
 
       @td =>
-        @button {outlet: "deleteButton", class: "btn btn-sm btn-warning inline-block-tight icon icon-x delete"}
+        @button {outlet: "deleteButton", class: "btn btn-sm inline-block-tight icon icon-x delete"}
 
   initialize: ->
     if @tableView.draggable

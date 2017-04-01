@@ -8,7 +8,7 @@ class CommandItemView extends View
 
   @content: (commandChooseView, command) ->
     @li {class: 'item-view'}, =>
-      @button {outlet: "button", class: 'btn btn-sm btn-warning icon icon-x'}
+      @button {outlet: "button", class: 'btn btn-sm icon icon-x'}
       @button 'Name', {outlet: "nameSpan", class: 'btn btn-sm name-label'}
 
   initialize: ->
