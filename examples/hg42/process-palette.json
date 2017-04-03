@@ -52,7 +52,7 @@
       "expression": "^\\s*at\\b"
     }
   },
-  "defaultPatterns": [
+  "allPatterns": [
     "path_colon",
     "path_file_line",
     "path_file_paren_line",

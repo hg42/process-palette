@@ -94,20 +94,15 @@ class ProjectController
     if !@processConfigs?
       return;
 
+    # patterns
+
     @addDefaultPattern();
-
-    if not @processConfigs.defaultPatterns?
-      @processConfigs.defaultPatterns = []
-
-    for key in @processConfigs.defaultPatterns
-      if not key of @processConfigs.patterns
-        @processConfigs.defaultPatterns.remove key
 
     if @processConfigs.patterns?
       for key, value of @processConfigs.patterns
         @addPattern(key, value);
-        if not key in @processConfigs.defaultPatterns
-          @processConfigs.defaultPatterns.push key
+
+    # commands
 
     if @processConfigs.commands?
       commands = @processConfigs.commands.slice();
