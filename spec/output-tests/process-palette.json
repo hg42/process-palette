@@ -9,8 +9,14 @@
     "path_file_paren_line": {
       "expression": "(?:\n\\bfile:?\\s+|\n\\bsource:?\\s+|\n\\bat:?\\s+\n)?\n['\"]?(path)['\"]?\n\\s*[(\\[](line)[\\])]"
     },
+    "path_squote": {
+      "expression": "(^.*?')(path)('.*$)"
+    },
+    "path_dquote": {
+      "expression": "(^.*?\")(path)(\".*$)"
+    },
     "path": {
-      "expression": "['\"]?(path)['\"]?"
+      "expression": "(path)"
     },
     "line_trace_begin": {
       "expression": "^\\s*\\\\\\s+"
@@ -52,12 +58,13 @@
       "expression": "^\\s*at\\b"
     }
   },
-  "defaultPatterns": [
+  "allPatterns": [
     "path_colon",
     "path_file_line",
     "path_file_paren_line",
+    "path_squote",
+    "path_dquote",
     "path",
-    "default",
     "line_trace_begin",
     "line_trace_end",
     "inline_trace_result",

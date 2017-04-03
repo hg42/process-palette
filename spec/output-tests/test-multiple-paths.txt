@@ -13,3 +13,4 @@ EXPECT:
 # matching path with line number, but file does not exist
 # several inline "error" patterns
 # "path:line" and "path(line)" or "path (line)" patterns
+# prefixed and suffixed paths: "path", 'path' etc.

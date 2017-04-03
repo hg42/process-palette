@@ -179,7 +179,7 @@ class ProcessOutputView extends View
 
   appendLine: (line) ->
 
-    #console.log("<< " + line)
+    #console.log "<< " + line
 
     #@outputPanel.append @sanitizeOutput(line) + "<br>"
 
@@ -194,11 +194,11 @@ class ProcessOutputView extends View
         if pattern.config.isPathExpression
           matches = pattern.match(remaining)
           if matches?
-            #console.log(["path match", matches.match, remaining])
+            #console.log ["path match", matches.match, remaining]
             # TODO: search in some path (active project, active-file, other projects, other open files)
             if fsp.isFileSync(matches.path)
               any_match = true
-              #console.log(["path exist", matches.match, remaining])
+              #console.log ["path exist", matches.match, remaining]
               cwd = @processController.getCwd()
               line_parts.push matches.pre
               obj = new PathView(cwd, matches)

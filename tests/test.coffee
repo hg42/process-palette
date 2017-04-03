@@ -2,6 +2,11 @@
 console.log "---------- hello"
 
 if 1
+  a = ["1","2","3"]
+  a.splice a.indexOf("2"), 1
+  console.log a
+
+if 0
   {$, $$} = require 'atom-space-pen-views'
 
   console.log $.fn.jquery

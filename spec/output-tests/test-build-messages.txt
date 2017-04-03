@@ -1,6 +1,3 @@
-build: at: ../../lib/views args: ../../lib/views/process-output-view.coffee
-build: at: ... args: ../../lib/views/process-output-view.coffee
-xxxx.xxx ../../lib/views/process-output-view.coffee
 BUILD FAILED
 build: compilation error
    * TEST
@@ -12,9 +9,6 @@ blabla, source: ./output-tests-spec.coffee (44)
 
 EXPECT:
 
-<span class="line_build" is="space-pen-span">build: at: ../../lib/views args: <span is="space-pen-span"><span class="process-palette-path-view" click="clicked">../../lib/views/process-output-view.coffee</span></span></span>
-<span class="line_build" is="space-pen-span">build: at: ... args: <span is="space-pen-span"><span class="process-palette-path-view" click="clicked">../../lib/views/process-output-view.coffee</span></span></span>
-xxxx.xxx <span is="space-pen-span"><span class="process-palette-path-view" click="clicked">../../lib/views/process-output-view.coffee</span></span>
 <span class="line_build" is="space-pen-span">BUILD <span class="inline_fail" is="space-pen-span">FAILED</span></span>
 <span class="line_build" is="space-pen-span">build: compilation <span class="inline_error" is="space-pen-span">error</span></span>
 <span class="line_star" is="space-pen-span">   * TEST</span>
