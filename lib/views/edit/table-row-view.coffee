@@ -13,6 +13,10 @@ class TableRowView extends View
         @td {outlet: "selectElement"}, =>
           @input {outlet: "selectButton", type: 'checkbox', class: "select input-checkbox"}
 
+      if self.tableView.options.deletable
+        @td =>
+          @button {outlet: "deleteButton", class: "btn btn-sm inline-block-tight icon icon-x delete"}
+
       for column in [0...columnCount]
         @td =>
           editor = new TextEditorView();
@@ -22,10 +26,6 @@ class TableRowView extends View
           editor.getModel().setLineNumberGutterVisible(false);
           self.editors.push(editor);
           @subview null, editor
-
-      if self.tableView.options.deletable
-        @td =>
-          @button {outlet: "deleteButton", class: "btn btn-sm inline-block-tight icon icon-x delete"}
 
   initialize: ->
     if @tableView.options.selectable

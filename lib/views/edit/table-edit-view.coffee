@@ -24,18 +24,18 @@ class TableEditView extends View
           @colgroup =>
             if options.selectable
               @col {style:"width:0%"}
-            for column in columns
-              @col {style:"width:#{colWidth}%"}
             if options.deletable
               @col {style:"width:0%"}
+            for column in columns
+              @col {style:"width:#{colWidth}%"}
           @thead =>
             @tr =>
               if options.selectable
-                @th 'select'
+                @th 'select', {class: 'text-highlight', style:"padding-right:1em"}
+              if options.deletable
+                @th 'delete', {class: 'text-highlight', style:"padding-right:1em"}
               for column in columns
                 @th column, {class: 'text-highlight'}
-              if options.deletable
-                @th 'delete'
           @tbody {outlet: 'tableBody'}
       @div {class: 'button-view drop-target'}, =>
         @button 'Add', {outlet: 'addButton', class: "btn btn-sm", click: 'addEmptyRow'}
