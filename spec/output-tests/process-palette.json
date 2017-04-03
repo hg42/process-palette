@@ -10,10 +10,10 @@
       "expression": "(?:\n\\bfile:?\\s+|\n\\bsource:?\\s+|\n\\bat:?\\s+\n)?\n['\"]?(path)['\"]?\n\\s*[(\\[](line)[\\])]"
     },
     "path_squote": {
-      "expression": "(^.*?')(path)('.*$)"
+      "expression": "'(path)'"
     },
     "path_dquote": {
-      "expression": "(^.*?\")(path)(\".*$)"
+      "expression": "\"(path)\""
     },
     "path": {
       "expression": "(path)"
