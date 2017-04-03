@@ -9,7 +9,7 @@ class TableRowView extends View
 
   @content: (self, columnCount) ->
     @tr {class: "table-row"}, =>
-      if self.tableView.draggable
+      if self.tableView.options.selectable
         @td {outlet: "selectElement"}, =>
           @input {outlet: "selectButton", type: 'checkbox', class: "select input-checkbox"}
 
@@ -23,16 +23,19 @@ class TableRowView extends View
           self.editors.push(editor);
           @subview null, editor
 
-      @td =>
-        @button {outlet: "deleteButton", class: "btn btn-sm inline-block-tight icon icon-x delete"}
+      if self.tableView.options.deletable
+        @td =>
+          @button {outlet: "deleteButton", class: "btn btn-sm inline-block-tight icon icon-x delete"}
 
   initialize: ->
-    if @tableView.draggable
-      @addClass 'drop-target'
+    if @tableView.options.selectable
       @selectButton.click (e) => @clickSelect(e);
       @selectButton.on 'mousedown', (e) -> e.preventDefault();  # prevent getting focus???
+    if @tableView.options.deletable
       @deleteButton.click => @delete();
       @deleteButton.on 'mousedown', (e) -> e.preventDefault();  # prevent getting focus???
+    if @tableView.options.draggable
+      @addClass 'drop-target'
 
   setChecked: (checkbox, checked) ->
     if checkbox?
@@ -53,12 +56,12 @@ class TableRowView extends View
     if value
       @selected = true
       $(@).addClass "selected"
-      if @tableView.draggable
+      if @tableView.options.draggable
         $(@).attr("draggable", true)
     else
       @selected = false
       $(@).removeClass "selected"
-      if @tableView.draggable
+      if @tableView.options.draggable
         $(@).attr("draggable", false)
     @tableView.updateView()
 

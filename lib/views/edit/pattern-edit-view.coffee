@@ -30,7 +30,8 @@ class PatternEditView extends View
         @tag 'p'
         @subview 'tableView', new TableEditView(
                                     ['Name', 'Expression', 'Path RegEx'],
-                                    true)
+                                    draggable: true, deletable: true
+                                    )
 
   initialize: ->
     patterns = @config.patterns;

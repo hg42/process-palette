@@ -4,36 +4,45 @@ TableRowView = require './table-row-view'
 module.exports =
 class TableEditView extends View
 
-  constructor: (@columns, @draggable = false) ->
-    super(@columns, @draggable);
+  constructor: (@columns, @options = {}) ->
+    @options.selectable ?= false
+    @options.deletable  ?= false
+    @options.draggable  ?= false
+
+    # TODO: need selecting for dragging (for now), but dragging without selecting would drag a single element
+    @options.selectable or= @options.draggable
+
+    super(@columns, @options);
     @rowViews = [];
 
-  @content: (columns, draggable) ->
+  @content: (columns, options) ->
     colWidth = 100 / columns.length;
 
     @div {class: 'process-palette-table-edit-view'}, =>
       @div {class: 'table-view'}, =>
         @table =>
           @colgroup =>
-            if draggable
+            if options.selectable
               @col {style:"width:0%"}
             for column in columns
               @col {style:"width:#{colWidth}%"}
-            @col {style:"width:0%"}
+            if options.deletable
+              @col {style:"width:0%"}
           @thead =>
             @tr =>
-              if draggable
+              if options.selectable
                 @th 'select'
               for column in columns
                 @th column, {class: 'text-highlight'}
-              @th 'delete'
+              if options.deletable
+                @th 'delete'
           @tbody {outlet: 'tableBody'}
       @div {class: 'button-view drop-target'}, =>
         @button 'Add', {outlet: 'addButton', class: "btn btn-sm", click: 'addEmptyRow'}
 
   initialize: ->
     @addButton.on 'mousedown', (e) -> e.preventDefault();
-    if @draggable
+    if @options.draggable
       @dragInit()
 
   reset: ->
