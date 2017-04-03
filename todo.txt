@@ -1,13 +1,10 @@
 
 TODO: .process-palette-output-panel does not work with padding etc. (resizer?)
-
-PR:
-
-TODO: patterns-JSON: map->list, migrate and popup message, version field, clone from other package (-> morassman)
+TODO: in ~/.atom local config loaded twice, prevent duplicates by using name as key
 
 TODO: pattern selector with horizontally floating items?
 TODO: pattern selector ("none", "all", "selected"), hide list unless "selected"
 
-TODO: global Path RegEx setting
 
-TODO: don't load local config when the same as global (or look at or better replace command names?)
+PR:
+  TODO: global Path RegEx setting
