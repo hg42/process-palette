@@ -1,14 +1,13 @@
-TODO: defaultPatterns:
-
-The whole reason to have default patterns is to always use the same patterns for all commands (that's how I always used this). Meaning no work for the usual case and some work for special cases.
-I only created the setting "defaultPatterns" to have the same list as the commands use.
-So, I think a selection of patterns is not necessary.
-
-Additionally, the sequence mostly depends on the kind of patterns. It's a kind of priority list.
-You could create patterns that don't conflict. But a priority list is simpler to understand and maintain.
-
-TODO: pattern selection in command editor (drop it? use groups? words+popup-list?)
-
-TODO: patterns-JSON: map -> list, migrate and popup message
 
 TODO: .process-palette-output-panel does not work with padding etc. (resizer?)
+
+PR:
+
+TODO: patterns-JSON: map->list, migrate and popup message, version field, clone from other package (-> morassman)
+
+TODO: pattern selector with horizontally floating items?
+TODO: pattern selector ("none", "all", "selected"), hide list unless "selected"
+
+TODO: global Path RegEx setting
+
+TODO: don't load local config when the same as global (or look at or better replace command names?)
