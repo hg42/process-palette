@@ -11,6 +11,11 @@ if ${build_file:-false}; then
     done < $1
     exit
   fi
+  if [[ $1 == *.coffee ]]; then
+    chdir $cwd
+    run_coffee $*
+    exit
+  fi
   echo cannot build file $1
   exit
 fi
