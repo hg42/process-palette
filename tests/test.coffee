@@ -1,17 +1,17 @@
 
 console.log "---------- hello"
 
-if 1
+if 0    # remove value from array
   a = ["1","2","3"]
   a.splice a.indexOf("2"), 1
   console.log a
 
-if 0
-  {$, $$} = require 'atom-space-pen-views'
+if 0    # get jquery version used in space-pen
 
+  {$, $$} = require 'atom-space-pen-views'
   console.log $.fn.jquery
 
-if 0
+if 0    # regexp
 
   re = ""
   re += "(?:\n\\bfile:?\\s+|\n\\bsource:?\\s+|\n\\bat:?\\s+\n)?"
