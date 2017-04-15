@@ -263,7 +263,8 @@ class ProcessOutputView extends View
                 #console.log(["push", matches.pre])
                 line_parts.push matches.pre
                 # build span
-                obj = $$ -> @span {class: pattern.config.name}, => @raw(matches.match)
+                text = @sanitizeOutput(matches.match)
+                obj = $$ -> @span {class: pattern.config.name}, =>  @raw(text)
                 obj.name = pattern.config.name
                 #console.log(["push", obj])
                 line_parts.push obj
@@ -295,7 +296,8 @@ class ProcessOutputView extends View
           line_span = $$ -> @span {class: pattern.config.name}
           for part in line_parts
             if typeof part == "string"
-              line_span.append $$ -> @text(part)
+              text = @sanitizeOutput(part)
+              line_span.append $$ -> @raw(text)
             else
               line_span.append part
           @outputPanel.append(line_span)
