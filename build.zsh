@@ -7,6 +7,7 @@ if ${build_file:-false}; then
     chdir $cwd
     while read line; do
       if [[ $line == EXPECT: ]]; then break; fi
+      if [[ $line == \#* ]]; then break; fi
       echo $line
     done < $1
     exit
