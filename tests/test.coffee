@@ -1,6 +1,18 @@
 
 console.log "---------- hello"
 
+console.log ['a', 'b'].isinstanceof Array
+
+if 0
+  text = "foo abc test 123 test xyz bar"
+  re = /(abc.*?)(\d+)(.*xyz)/
+  console.log text.match re
+
+if 0
+  text = "foo abc test 123 test xyz bar"
+  re = /abc.*?(\d+).*xyz/
+  console.log text.match re
+
 if 0    # remove value from array
   a = ["1","2","3"]
   a.splice a.indexOf("2"), 1

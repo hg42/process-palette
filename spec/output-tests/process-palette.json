@@ -1,16 +1,10 @@
 {
   "patterns": {
-    "path_file_line": {
-      "expression": "(?:\n\\bfile:?\\s+|\n\\bsource:?\\s+|\n\\bat:?\\s+\n)?\n['\"]?(path)['\"]?\n.*\n\\bline\\s+(line)"
-    },
-    "path_line_file": {
-      "expression": "\\bline\\s+\n(line)\n.*\n(?:\n(?:\\b|\\\\n)\n(?:\nfile:?\\s+|\nsource:?\\s+|\nat:?\\s+\n))\n['\"]?(path)['\"]?"
-    },
-    "path_file_paren_line": {
-      "expression": "(?:\n\\bfile:?\\s+|\n\\bsource:?\\s+|\n\\bat:?\\s+\n)?\n['\"]?(path)['\"]?\n\\s*[(\\[](line)[\\])]"
-    },
     "path_colon": {
       "expression": "(path):(line)"
+    },
+    "path_file_line": {
+      "expression": "(?:\n  \\b file:?   \\s+ |\n  \\b source:? \\s+ |\n  \\b at:?     \\s+\n)?\n(?:\n  ' (path) ' |\n  \" (path) \" |\n    (path)\n)\n(?:\n  [\\s,]+\n  (?:\n    \\b line:? \\s* (line)    |\n               \\( (line) \\) |\n               \\[ (line) \\]\n  )\n)?"
     },
     "path_squote": {
       "expression": "'(path)'"
@@ -21,14 +15,14 @@
     "path": {
       "expression": "(path)"
     },
-    "inline_trace_result": {
-      "expression": "(^\\s*/\\s+.*)(\\s+=\\s+.*)(.*$)"
-    },
     "line_trace_begin": {
-      "expression": "^\\s*\\\\\\s+.*$"
+      "expression": "^\\s*\\\\\\s+"
     },
     "line_trace_end": {
-      "expression": "^\\s*/\\s+.*$"
+      "expression": "^\\s*/\\s+"
+    },
+    "inline_trace_result": {
+      "expression": "(?:^)\\s*/\\s+.*\\s+(=\\s+.*).*$"
     },
     "inline_error": {
       "expression": "[-\\w]*error[-\\w]*"
@@ -36,56 +30,42 @@
     "inline_fail": {
       "expression": "\\bfail(?:ure|ed)?\\b"
     },
-    "inline_warning": {
-      "expression": "\\bwarn(?:ing)?\\b"
-    },
     "inline_tag": {
       "expression": "<[^<>]*>"
     },
-    "line_bracket": {
-      "expression": "^\\s*[[{].*[\\]}]\\s*$"
-    },
-    "line_dashes": {
-      "expression": "^\\s*--.*$"
+    "inline_bracket": {
+      "expression": "\\[[^\\[\\]]*\\]|{[^{}]*}"
     },
     "line_command": {
-      "expression": "^\\s*>.*$"
-    },
-    "line_exclamation": {
-      "expression": "^\\s*!.*$"
-    },
-    "line_star": {
-      "expression": "^\\s*\\*.*$"
+      "expression": "^\\s*>"
     },
     "line_build": {
-      "expression": "^\\s*build.*$"
+      "expression": "^\\s*build"
     },
-    "line_at": {
-      "expression": "^\\s*at\\b.*$"
+    "line_dashes": {
+      "expression": "^\\s*--"
+    },
+    "line_star": {
+      "expression": "^\\s*\\*"
     }
   },
   "allPatterns": [
-    "path_file_line",
-    "path_line_file",
-    "path_file_paren_line",
     "path_colon",
+    "path_file_line",
     "path_squote",
     "path_dquote",
     "path",
-    "inline_trace_result",
     "line_trace_begin",
     "line_trace_end",
+    "inline_trace_result",
     "inline_error",
     "inline_fail",
-    "inline_warning",
     "inline_tag",
-    "line_bracket",
-    "line_dashes",
+    "inline_bracket",
     "line_command",
-    "line_exclamation",
-    "line_star",
     "line_build",
-    "line_at"
+    "line_dashes",
+    "line_star"
   ],
   "commands": [
     {

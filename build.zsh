@@ -1,15 +1,19 @@
 
 #echo $*
 #set
+#echo dir=$dir
+#echo cwd=$cwd
+#echo pwd=$(pwd)
 
 if ${build_file:-false}; then
-  if [[ $1 == *.txt ]]; then
+  file=$1
+  if [[ $(basename $file) == test-*.txt ]]; then
     chdir $cwd
     while read line; do
       if [[ $line == EXPECT: ]]; then break; fi
       if [[ $line == \#* ]]; then break; fi
       echo $line
-    done < $1
+    done < $file
     exit
   fi
   if [[ $1 == *.coffee ]]; then
@@ -22,4 +26,9 @@ if ${build_file:-false}; then
 fi
 
 #zsh ./tests/test-multi-inline-patterns.zsh
-apm test
+#apm test
+if [[ $cwd == */spec/* ]]; then
+  atom --test $cwd
+else
+  atom --test spec
+fi

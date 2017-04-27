@@ -195,7 +195,7 @@ class ProcessOutputView extends View
         for part in parts
           if typeof part != "string"
             # copy non-string parts (already processed)
-            #console.log(["push", part])
+            #console.log(["+ + push", part])
             line_parts.push part
           else
             # match string parts
@@ -203,15 +203,16 @@ class ProcessOutputView extends View
             while remaining.length > 0
               matches = pattern.match(remaining)
               if matches?
-                #console.log ["path match", matches.match, matches.path, remaining]
+                #console.log ["+ path match", matches.match, matches.path, remaining]
                 line_parts.push matches.pre
                 # TODO: search in some path (active project, active-file, other projects, other open files)
                 if fsp.isFileSync(matches.path)
-                  #console.log ["path exist", matches.match, remaining]
+                  #console.log ["+ path exist", matches.match, remaining]
                   cwd = @processController.getCwd()
                   obj = new PathView(cwd, matches)
+                  obj.addClass(pattern.config.name)
                   obj.name = "path"
-                  #console.log(["push", obj])
+                  #console.log(["+ + push", obj])
                   line_parts.push obj
                 else
                   line_parts.push matches.match
@@ -226,29 +227,30 @@ class ProcessOutputView extends View
         # concatenate strings following strings
         parts = line_parts
         line_parts = []
-        string = ""
+        combined = ""
         for part in parts
           if typeof part != "string"
-            if string.length
-              line_parts.push string
-              string = ""
+            if combined.length
+              line_parts.push combined
+              combined = ""
             line_parts.push part
           else
-            string += part
-        if string.length
-          line_parts.push string
+            combined += part
+        if combined.length
+          line_parts.push combined
       #console.log(["line_parts", line_parts])
 
     ##### process inline patterns
     for pattern in @patterns
-      #console.log(["pattern", pattern.config.name, remaining])
+      #console.log(["pattern", pattern.config.name])
       if pattern.config.isInlineExpression
         # process all parts and build new line_parts array
+        #console.log(["pattern", pattern.config.name])
         #console.log(["line_parts", line_parts])
         parts = line_parts
         line_parts = []
         for part in parts
-          if typeof part != "string"
+          if typeof part == "object"
             # copy non-string parts (already processed)
             #console.log(["push", part])
             line_parts.push part
@@ -258,9 +260,9 @@ class ProcessOutputView extends View
             while remaining.length > 0
               matches = pattern.match(remaining)
               if matches?
-                #console.log(["expr match", matches, remaining])
+                #console.log(["expr match", remaining])
+                #console.log(JSON.stringify(matches, null, "  "))
                 # copy string in front of match
-                #console.log(["push", matches.pre])
                 line_parts.push matches.pre
                 # build span
                 text = @sanitizeOutput(matches.match)
@@ -290,7 +292,7 @@ class ProcessOutputView extends View
     ##### (whole-)line matching
     for pattern in @patterns
       if pattern.config.isLineExpression
-        matches = line.match(pattern.regex)
+        matches = pattern.match(line)
         if matches?
           #console.log(["line match", matches.match, line_processed])
           line_span = $$ -> @span {class: pattern.config.name}
@@ -300,12 +302,16 @@ class ProcessOutputView extends View
               line_span.append $$ -> @raw(text)
             else
               line_span.append part
+          #console.log "\n\n--- line_span\n" + line_span[0].innerHTML + "\n---\n\n"
           @outputPanel.append(line_span)
           return
 
+    # no (while-)line match
     for part in line_parts
       if typeof part == "string"
         part = @sanitizeOutput(part)
+      else
+        #console.log "\n\n--- part\n" + part[0].innerHTML + "\n---\n\n"
       @outputPanel.append(part)
 
   # Tear down any state and detach
