@@ -8,5 +8,6 @@ TODO: pattern selector ("none", "all", "selected"), hide list unless "selected"
 TOD: append "ok" or "exit xxx", when stopped, and/or colorize background differently (add class for state)
 
 PR:
-  TODO: global Path RegEx setting
+  TODO: global "Path RegEx" setting
   TODO: numbers etc. divide ansi color patterns
+        => move ansi conversion in front of pattern conversion?
