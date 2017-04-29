@@ -1,13 +1,26 @@
 
-TODO: .process-palette-output-panel does not work with padding etc. (resizer?)
-TODO: in ~/.atom local config loaded twice, prevent duplicates by using name as key
-
-TODO: pattern selector with horizontally floating items?
-TODO: pattern selector ("none", "all", "selected"), hide list unless "selected"
-
-TOD: append "ok" or "exit xxx", when stopped, and/or colorize background differently (add class for state)
-
 PR:
   TODO: global "Path RegEx" setting
   TODO: numbers etc. divide ansi color patterns
         => move ansi conversion in front of pattern conversion?
+
+pattern:
+
+  TODO: use named groups to add sub spans with <patternName>-<groupName>
+
+  ideas:
+    TODO: "ignore" pattern? e.g. for ansi sequences or "final" flag (don't scan included text)
+    TODO: pattern type by prefix? line-, inline-, path-, ignore-, or prefix characters? "^"=line, "-"=ignore
+
+    pattern selector for commands:
+      TODO: pattern selector with horizontally floating items? (to save space)
+      TODO: pattern selector ("none", "all", "selected"), hide list unless "selected"
+
+other:
+
+  flaws:
+    TODO: .process-palette-output-panel does not work with padding etc. (resizer?)
+    TODO: in ~/.atom local config loaded twice, prevent duplicates by using name as key
+
+  ideas:
+    TODO: append "ok" or "exit xxx" when stopped, and/or colorize background differently (add class for state)
