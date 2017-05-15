@@ -20,9 +20,9 @@ class PathPattern
       post = matches.post
       path = matches.groups.path
       line = matches.groups.line
-      #console.log ["path match:", JSON.stringify(path), JSON.stringify(line)]
       if line != null
         line = parseInt(line);
+      #console.log ["path match:", JSON.stringify(path), JSON.stringify(line)]
 
       return new PathMatch(text, match, pre, post, path, line);
 

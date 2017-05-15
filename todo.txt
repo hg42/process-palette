@@ -1,12 +1,15 @@
 
 PR:
+  TODO: docs
   TODO: global "Path RegEx" setting
-  TODO: numbers etc. divide ansi color patterns
-        => move ansi conversion in front of pattern conversion?
 
 pattern:
 
   TODO: use named groups to add sub spans with <patternName>-<groupName>
+
+  flaws:
+    TODO: numbers etc. divide ansi color patterns
+          => move ansi conversion in front of pattern conversion?
 
   ideas:
     TODO: "ignore" pattern? e.g. for ansi sequences or "final" flag (don't scan included text)
@@ -24,3 +27,4 @@ other:
 
   ideas:
     TODO: append "ok" or "exit xxx" when stopped, and/or colorize background differently (add class for state)
+    TODO: remember scroll position when switching command settings
